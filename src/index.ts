@@ -54,14 +54,10 @@ async function nftSalesBot(options: Options) {
     })
   );
 
-  var contracts = []
-  for (const contractAddress in options.contractAddresses) {
-    // Create new contract and push onto array
-    contracts.push(new web3.eth.Contract(
-      abi as unknown as AbiItem,
-      contractAddress
-    ));
-  }
+  const contract = new web3.eth.Contract(
+    abi as unknown as AbiItem,
+    options.contractAddress
+  );
 
   async function transferCallback(res: TransferEvent) {
     console.log("Transfer event received.");
@@ -117,14 +113,12 @@ async function nftSalesBot(options: Options) {
     }
   }
 
-  for (var contract in contracts) {
-    console.log("Adding contract event listener for contract: ", contract.options.address);
-    contract.events.Transfer(async (err: any, res: TransferEvent) => {
-      if (!err) {
-        await transferCallback(res);
-      }
-    });
-  }
+  console.log("Adding contract event listener for contract: ", contract.options.address);
+  contract.events.Transfer(async (err: any, res: TransferEvent) => {
+    if (!err) {
+      await transferCallback(res);
+    }
+  });
 
   return {
     test: transferCallback,
