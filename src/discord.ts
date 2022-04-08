@@ -1,6 +1,12 @@
 import { format } from "date-fns";
 import Discord, { Intents, TextChannel } from "discord.js";
 
+const MessageAuthor = {
+  name: 'Space Sales Bot',
+  url: 'https://www.spacepunks.club/',
+  iconURL: 'https://api.spacepunks.club/punks/image/5112'
+};
+
 export const discordSetup = (
   discordBotToken: string,
   discordChannelId: string
@@ -29,11 +35,7 @@ export const createMessage = (
   new Discord.MessageEmbed()
     .setColor("#66ff82")
     .setTitle(`${metadata.name} sold!`)
-    .setAuthor(
-      "NFT Sales Bot",
-      "https://lh3.googleusercontent.com/JwIqBA0ilWVKXhRMG7kWTqfSZWaDQtYPbgVAAVrtZ4l1FxTbrdWVSZaB2K3gwXU5TAR3sqB0_8H8dWysOTGtczNK7zaoOJcCYR9iir8=w600",
-      "https://github.com/nftboi/discord-nft-sales-bot"
-    )
+    .setAuthor(MessageAuthor)
     .addFields(
       { name: "Name", value: metadata.name },
       { name: "Amount", value: `${value} Ξ` },
