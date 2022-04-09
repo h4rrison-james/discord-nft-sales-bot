@@ -94,6 +94,13 @@ async function nftSalesBot(options: Options) {
 
       console.log('Metadata: ', metadata);
 
+      // Remove WEBP format images for now
+      // TODO: Use an embed object and convert format
+      // https://discordjs.guide/popular-topics/embeds.html#using-an-embed-object-1
+      if (metadata.image.slice(-4) == 'webp') {
+        metadata.image = ''
+      }
+
       const block = await web3.eth.getBlock(res.blockNumber);
       const message = createMessage(
         metadata,

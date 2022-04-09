@@ -37,10 +37,9 @@ export const createMessage = (
     .setTitle(`${metadata.name} sold!`)
     .setAuthor(MessageAuthor)
     .addFields(
-      { name: "Name", value: metadata.name },
-      { name: "Amount", value: `${value} Ξ` },
-      { name: "Buyer", value: buyer },
-      { name: "Seller", value: seller },
+      { name: "Amount", value: `${value} Ξ`, inline: true },
+      { name: "Buyer", value: `[${buyer.slice(-4)}](https://opensea.io/${buyer})`, inline: true },
+      { name: "Seller", value: `[${seller.slice(-4)}](https://opensea.io/${seller})`, inline: true },
       {
         name: "Block Time",
         value: format(
