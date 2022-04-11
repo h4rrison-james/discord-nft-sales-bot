@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import fetch from "node-fetch";
 import Discord, { Intents, TextChannel } from "discord.js";
 
 const MessageAuthor = {
@@ -23,7 +24,7 @@ export const discordSetup = (
   });
 };
 
-export const createMessage = (
+export const createMessage = async (
   metadata: { name: string; image: string },
   value: string,
   buyer: string,
@@ -31,8 +32,16 @@ export const createMessage = (
   timestamp: string | number,
   contractAddress: string,
   tokenId: string
-) =>
-  new Discord.MessageEmbed()
+) => {
+
+  // TODO: Embed the image as a MessageAttachment to improve attach rates
+  // const response = await fetch(metadata.image)
+  // const arrayBuffer = await response.arrayBuffer()
+  // const buffer = Buffer.from(arrayBuffer)
+  //
+  // const imageAttachment = new Discord.MessageAttachment(buffer, 'image')
+
+  return new Discord.MessageEmbed()
     .setColor("#66ff82")
     .setTitle(`${metadata.name} sold!`)
     .setAuthor(MessageAuthor)
@@ -50,3 +59,4 @@ export const createMessage = (
     )
     .setURL(`https://opensea.io/assets/${contractAddress}/${tokenId}`)
     .setImage(metadata.image);
+}

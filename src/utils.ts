@@ -12,6 +12,12 @@ export const fetchMetadata =
       console.log('Modified URI: ', uri)
     }
 
-    const res = await fetch(uri).then((r) => r.json());
+    var res = await fetch(uri).then((r) => r.json());
+
+    // Proxy image URL if it is IPFS protocol
+    if (res.image.substring(0,4) == 'ipfs') {
+      res.image = 'https://ipfs.io/ipfs/' + res.image.substring(7)
+    }
+
     return cb(res);
   };

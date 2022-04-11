@@ -102,7 +102,7 @@ async function nftSalesBot(options: Options) {
       }
 
       const block = await web3.eth.getBlock(res.blockNumber);
-      const message = createMessage(
+      const message = await createMessage(
         metadata,
         value.toFixed(),
         res.returnValues.to,
