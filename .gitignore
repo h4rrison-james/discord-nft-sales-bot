@@ -1,3 +1,6 @@
+# Package Specific
+.env
+
 # Logs
 logs
 *.log
