@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import fetch from "node-fetch";
-import Discord, { Intents, TextChannel } from "discord.js";
+import { fileTypeFromBuffer } from "file-type";
+import Discord, { Intents, TextChannel, MessageAttachment } from "discord.js";
 
 const MessageAuthor = {
   name: 'Space Sales Bot',
@@ -24,6 +25,26 @@ export const discordSetup = (
   });
 };
 
+export const createAttachment = async (
+  metadata: { name: string; image: string }
+) => {
+
+  // Fetch the image and load into a buffer
+  const response = await fetch(metadata.image)
+  const arrayBuffer = await response.arrayBuffer()
+  const buffer = Buffer.from(arrayBuffer)
+
+  // Determine the image extension
+  const imageType = await fileTypeFromBuffer(buffer)
+  console.log('Image Type: ', imageType)
+  if (imageType) {
+    return new Discord.MessageAttachment(buffer, `image.${imageType.ext}`)
+  } else {
+    return undefined
+  }
+
+}
+
 export const createMessage = async (
   metadata: { name: string; image: string },
   value: string,
@@ -31,15 +52,9 @@ export const createMessage = async (
   seller: string,
   timestamp: string | number,
   contractAddress: string,
-  tokenId: string
+  tokenId: string,
+  file?: MessageAttachment
 ) => {
-
-  // TODO: Embed the image as a MessageAttachment to improve attach rates
-  // const response = await fetch(metadata.image)
-  // const arrayBuffer = await response.arrayBuffer()
-  // const buffer = Buffer.from(arrayBuffer)
-  //
-  // const imageAttachment = new Discord.MessageAttachment(buffer, 'image')
 
   return new Discord.MessageEmbed()
     .setColor("#66ff82")
@@ -58,5 +73,5 @@ export const createMessage = async (
       }
     )
     .setURL(`https://opensea.io/assets/${contractAddress}/${tokenId}`)
-    .setImage(metadata.image);
+    .setImage(file ? `attachment://${file.name}` : '');
 }

@@ -2,7 +2,7 @@ import Web3 from "web3";
 import { AbiItem } from "web3-utils";
 import abi from "./erc721abi.json";
 import BN from "bignumber.js";
-import { createMessage, discordSetup } from "./discord";
+import { createMessage, createAttachment, discordSetup } from "./discord";
 import { fetchMetadata } from "./utils";
 import debug from "debug";
 
@@ -91,17 +91,13 @@ async function nftSalesBot(options: Options) {
       const metadata = await fetchMetadata(
         options.metadataCb ?? ((m: any) => m)
       )(uri);
-
       console.log('Metadata: ', metadata);
 
-      // Remove WEBP format images for now
-      // TODO: Use an embed object and convert format
-      // https://discordjs.guide/popular-topics/embeds.html#using-an-embed-object-1
-      if (metadata.image.slice(-4) == 'webp') {
-        metadata.image = ''
-      }
+      const block = await web3.eth.getBlock(res.blockNumber)
 
-      const block = await web3.eth.getBlock(res.blockNumber);
+      // Create image attachment, will return 'undefined' if no image specified
+      const file = await createAttachment(metadata)
+
       const message = await createMessage(
         metadata,
         value.toFixed(),
@@ -109,11 +105,17 @@ async function nftSalesBot(options: Options) {
         res.returnValues.from,
         block.timestamp,
         options.contractAddress,
-        res.returnValues.tokenId
+        res.returnValues.tokenId,
+        file
       );
       console.log("Try sending message: ", message);
       try {
-        await channel.send({ embeds: [message] });
+        if (file) {
+          // Send image attachment with message
+          await channel.send({ embeds: [message], files: [file] })
+        } else {
+          await channel.send({ embeds: [message] })
+        }
       } catch (e: any) {
         console.log("Error sending message", " ", e.message);
       }
