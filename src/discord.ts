@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import fetch from "node-fetch";
-import { fileTypeFromBuffer } from "file-type";
+const FileType = require('file-type');
 import Discord, { Intents, TextChannel, MessageAttachment } from "discord.js";
 
 const MessageAuthor = {
@@ -35,7 +35,7 @@ export const createAttachment = async (
   const buffer = Buffer.from(arrayBuffer)
 
   // Determine the image extension
-  const imageType = await fileTypeFromBuffer(buffer)
+  const imageType = await FileType.fromBuffer(buffer)
   console.log('Image Type: ', imageType)
   if (imageType) {
     return new Discord.MessageAttachment(buffer, `image.${imageType.ext}`)
