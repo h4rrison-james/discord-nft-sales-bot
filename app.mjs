@@ -5,8 +5,8 @@ nftSalesBot.default({
   // Websocket connection to Ethereum
   websocketURI: process.env.WEBSOCKET_URI,
 
-  // NFT smart contract address (default is SPC contract address)
-  contractAddress: process.env.CONTRACT_ADDRESS,
+  // Array of smart contract addresses to monitor
+  contractArray: JSON.parse(process.env.CONTRACT_ARRAY),
 
   // Bot token set up in Discord developer portal
   discordBotToken: process.env.DISCORD_BOT_TOKEN,
